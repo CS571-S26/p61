@@ -1,0 +1,190 @@
+{
+  "name": "merge-nb",
+  "displayName": "MergeNB",
+  "description": "Rich Jupyter Notebook Merge Conflict Resolver",
+  "version": "0.1.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Avni2000/MergeNB"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:jupyter-notebook",
+    "workspaceContains:**/*.ipynb"
+  ],
+  "extensionDependencies": [
+    "vscode.git"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "merge-nb.findConflicts",
+        "title": "Find Notebooks with Merge Conflicts",
+        "category": "MergeNB",
+        "icon": "$(git-merge)"
+      },
+      {
+        "command": "merge-nb.resolveCurrentFile",
+        "title": "Resolve Merge Conflicts",
+        "category": "MergeNB",
+        "icon": "$(warning)"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "resourceExtname == .ipynb",
+          "command": "merge-nb.findConflicts",
+          "group": "3_compare"
+        }
+      ],
+      "editor/title": [
+        {
+          "when": "resourceExtname == .ipynb && mergeNB.hasConflicts",
+          "command": "merge-nb.resolveCurrentFile",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "merge-nb.findConflicts",
+          "when": "true"
+        },
+        {
+          "command": "merge-nb.resolveCurrentFile",
+          "when": "resourceExtname == .ipynb && mergeNB.hasConflicts"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "merge-nb.findConflicts",
+        "key": "ctrl+shift+m",
+        "mac": "cmd+shift+m",
+        "when": "resourceExtname == .ipynb"
+      }
+    ],
+    "configuration": {
+      "title": "MergeNB",
+      "properties": {
+        "mergeNB.ui.hideNonConflictOutputs": {
+          "type": "boolean",
+          "default": false,
+          "description": "Hide outputs from cells without conflicts in the conflict resolution view"
+        },
+        "mergeNB.autoResolve.executionCount": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically resolve execution count differences by setting to null"
+        },
+        "mergeNB.autoResolve.kernelVersion": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically resolve kernel version differences by using current version"
+        },
+        "mergeNB.autoResolve.stripOutputs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically strip outputs from cells with conflicts"
+        },
+        "mergeNB.autoResolve.whitespace": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically resolve conflicts when source differences are whitespace-only"
+        },
+        "mergeNB.ui.showCellHeaders": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show cell type, execution count, and cell index in the conflict resolution view"
+        },
+        "mergeNB.ui.enableUndoRedoHotkeys": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Ctrl+Z / Ctrl+Shift+Z undo and redo shortcuts in the conflict resolution web UI"
+        },
+        "mergeNB.ui.showBaseColumn": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show the base (common ancestor) branch column in the conflict resolution view. When false, only current and incoming columns are shown."
+        },
+        "mergeNB.ui.theme": {
+          "type": "string",
+          "enum": [
+            "dark",
+            "light"
+          ],
+          "default": "dark",
+          "description": "Visual theme for the conflict resolution UI. 'light' provides a light, beige theme inspired by the MergeNB logo. 'dark' provides an inverse dark theme."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "find-dead-code": "knip | grep -vE '^(packages/core/src/index.ts|packages/web/server/src/index.ts|apps/vscode-extension/typings/git.d.ts):' || [ $? -eq 1 ]",
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p tsconfig.json --outDir out --noEmit false --module commonjs --moduleResolution node --esModuleInterop",
+    "watch-tests": "tsc -p tsconfig.json -w --outDir out --noEmit false --module commonjs --moduleResolution node --esModuleInterop",
+    "pretest": "npm run compile && npm run compile-tests",
+    "pretest:pw": "npm run compile && npm run compile-tests",
+    "pretest:vscode": "npm run compile && npm run compile-tests",
+    "pretest:e2e": "npm run compile && npm run compile-tests",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint apps packages",
+    "test": "node out/apps/vscode-extension/tests/runIntegrationTest.js",
+    "test:all": "npm run test:pw && npm run test:vscode && npm run test:e2e",
+    "test:vscode": "node out/apps/vscode-extension/tests/runIntegrationTest.js --vscode",
+    "test:e2e": "node out/apps/vscode-extension/tests/runIntegrationTest.js --e2e",
+    "test:pw": "npx playwright test",
+    "test:pw:ui": "npm run compile && npm run compile-tests && npx playwright test --ui",
+    "test:pw:headed": "npm run compile && npm run compile-tests && npx playwright test --headed",
+    "test:pw:debug": "npm run compile && npm run compile-tests && npx playwright test --debug"
+  },
+  "devDependencies": {
+    "@clack/prompts": "^1.1.0",
+    "@playwright/test": "^1.58.2",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/vscode": "^1.80.0",
+    "@types/ws": "^8.18.1",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.7.1",
+    "esbuild": "^0.27.4",
+    "eslint": "^10.1.0",
+    "npm-run-all": "^4.1.5",
+    "picocolors": "^1.1.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.2"
+  },
+  "dependencies": {
+    "@codemirror/language": "^6.12.3",
+    "@codemirror/language-data": "^6.5.2",
+    "@codemirror/merge": "^6.12.1",
+    "@jupyterlab/rendermime": "^4.5.6",
+    "@tanstack/react-virtual": "^3.13.23",
+    "@uiw/codemirror-theme-github": "^4.25.9",
+    "@uiw/react-codemirror": "^4.25.9",
+    "@vscode/markdown-it-katex": "^1.1.2",
+    "dompurify": "^3.3.3",
+    "immer": "^11.1.4",
+    "katex": "^0.16.44",
+    "knip": "^6.3.0",
+    "markdown-it": "^14.1.1",
+    "ws": "^8.20.0",
+    "zustand": "^5.0.12"
+  }
+}
