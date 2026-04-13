@@ -4,5 +4,5 @@ This is a read-only bare-bones copy of another repository. The part you're likel
 
 Anything else (packages, apps/vscode) is not for this project.
 
-See the running site using MergeNB's github pages: [](https://avni2000.github.io/MergeNB/)
+See the running site using MergeNB's github pages: [MergeNB Website](https://avni2000.github.io/MergeNB/) as well as the development repo [MergeNB Github](https://github.com/Avni2000/MergeNB)
 
