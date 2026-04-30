@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'MergeNB',
-  tagline: 'MergeNB is a VS Code extension for resolving Jupyter Notebook git merge conflicts.',
+  tagline: 'VS Code extension for resolving Jupyter Notebook git merge conflicts.',
   favicon: 'img/favicon.ico',
 
   future: {
@@ -23,7 +23,7 @@ const config: Config = {
 
   markdown: {
     hooks: {
-      onBrokenMarkdownLinks: 'warn',
+      onBrokenMarkdownLinks: 'throw',
     },
   },
 
@@ -100,14 +100,10 @@ const config: Config = {
     },
     colorMode: {
       defaultMode: 'light',
-      respectPrefersColorScheme: true,
+      disableSwitch: true,
+      respectPrefersColorScheme: false,
     },
     navbar: {
-      title: 'MergeNB',
-      logo: {
-        alt: 'MergeNB',
-        src: 'img/logo.png',
-      },
       items: [
         {
           type: 'docSidebar',
@@ -162,7 +158,6 @@ const config: Config = {
     },
     prism: {
       theme: prismThemes.github,
-      darkTheme: prismThemes.vsDark,
       additionalLanguages: ['bash', 'json', 'typescript', 'tsx'],
     },
   } satisfies Preset.ThemeConfig,

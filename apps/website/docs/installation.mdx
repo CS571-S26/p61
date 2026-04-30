@@ -10,21 +10,6 @@ description: Install MergeNB from a VSIX release or from source.
 
 MergeNB is currently only available as a VS Code extension. You can install it from a release or build it from source.
 
-## From a release
-
-The extension detects `merge.tool`, `merge.<name>.driver`, and `diff.<name>.driver` entries that look like
-nbdime or a Jupyter tool, and will warn before opening a conflict.
-
-{/* TODO: Support changing the VSIX download link in the release github action. */}
-1. Download the latest `.vsix` from the [releases page](https://github.com/Avni2000/MergeNB/releases), or directly from the link [here](https://github.com/Avni2000/MergeNB/releases/latest/download/merge-nb-0.3.0.vsix).
-2. Open VS Code.
-3. Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`) and run **Extensions: Install from VSIX...**
-4. Select the downloaded file.
-
-:::info VS Code Marketplace
-A VS Code Marketplace listing is in the works!
-:::
-
 ### Compatibility note
 
 :::warning nbdime
@@ -35,6 +20,18 @@ Pick one notebook merge strategy per repo.
 MergeNB will guard against nbdime configs and give you a way to disable nbdime. 
 :::
 
+
+## From a release
+
+{/* TODO: Support changing the VSIX download link in the release github action. We can hardcode the link then. */}
+1. Download the latest `.vsix` from the [releases page](https://github.com/Avni2000/MergeNB/releases)
+2. Open VS Code.
+3. Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`) and run **Extensions: Install from VSIX...**
+4. Select the downloaded file.
+
+:::info VS Code Marketplace
+A VS Code Marketplace listing is in the works!
+:::
 
 ## Quick Start
 
@@ -60,6 +57,13 @@ npm run package
 ### Development
 
 To load the extension in a development VS Code window:
-- Run `$ npm run compile && code --extensionDevelopmentPath=. --new-window <folder to open extension in>`
+- Run:
+
+```bash 
+npm run compile && code --extensionDevelopmentPath=. --new-window <folder to open extension in>
+```
    - There's also a `launch` configuration in VS Code that does this for you, as well as hot-reloading on file changes, but it's never worked for me.
-- See more in [Testing](./testing/index.mdx), since I've already created a TUI testing framework for this purpose.
+
+:::info testing
+See more in [Testing](./testing/index.mdx), since I've already created a TUI testing framework for this purpose.
+:::
